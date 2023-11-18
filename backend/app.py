@@ -1,13 +1,13 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 import sqlite3
 import bcrypt
 from database_utils import create_user, get_hashed_password
 from chat_bot import check_pattern, get_feature_names, get_tree, get_features, get_reduced_data, print_disease, sec_predict, calc_condition, get_precautions
 from sklearn.tree import _tree
 
-
 app = Flask(__name__)
-
+cors = CORS(app)
 
 @app.route("/register", methods=['POST'])
 def register():
