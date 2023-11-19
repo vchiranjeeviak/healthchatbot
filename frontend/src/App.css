@@ -98,7 +98,10 @@ a {
 
 .chat-container {
   height: 60vh;
-  width: 70%;
+  width: 60%;
+  overflow-y: 60vh; /* Enable vertical scrolling if content exceeds the height */
+  overflow-x: auto; /* Hide horizontal scrollbar */
+  overflow-wrap: break-word;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -107,6 +110,24 @@ a {
   padding: 30px 30px;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.user-chat-list {
+  list-style: none;
+  padding: 20px;
+  margin-left: 500px;
+  background-color: #c0fa79;
+  margin-bottom: 20px;
+  border-radius: 30px;
+}
+
+.bot-chat-list {
+  list-style: none;
+  padding: 20px;
+  background-color: rgb(141, 248, 212);
+  margin-bottom: 20px;
+  margin-right: 500px;
+  border-radius: 30px;
 }
 
 .chat-form {
