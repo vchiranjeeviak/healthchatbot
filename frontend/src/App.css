@@ -116,7 +116,7 @@ a {
   list-style: none;
   padding: 20px;
   margin-left: 500px;
-  background-color: #c9ff87;
+  background-color: #c0fa79;
   margin-bottom: 20px;
   border-radius: 30px;
 }
@@ -124,7 +124,7 @@ a {
 .bot-chat-list {
   list-style: none;
   padding: 20px;
-  background-color: aquamarine;
+  background-color: rgb(141, 248, 212);
   margin-bottom: 20px;
   margin-right: 500px;
   border-radius: 30px;

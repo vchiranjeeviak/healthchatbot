@@ -58,7 +58,6 @@ function UserChat({ onHandleUserChat, onHandleSubmit }) {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setChildInput(value);
-    // onHandleUserChat(value);
   };
 
   const handleButtonClick = () => {

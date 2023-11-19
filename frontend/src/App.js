@@ -15,22 +15,27 @@ function App() {
       setnavigation(false);
     }
   }, [cookies]);
+
   function handlenav(nav) {
     setnavigation((nav) => !nav);
   }
+
   function handleLogin(username) {
     setCookie("username", username, { path: "/" });
   }
 
   return (
+    // <div>
+    //   {cookies.username ? (
+    //     <Chat />
+    //   ) : navgation ? (
+    //     <Login onhandlenav={handlenav} onLogin={handleLogin} />
+    //   ) : (
+    //     <Registration onhandlenav={handlenav} />
+    //   )}
+    // </div>
     <div>
-      {cookies.username ? (
-        <Chat />
-      ) : navgation ? (
-        <Login onhandlenav={handlenav} onLogin={handleLogin} />
-      ) : (
-        <Registration onhandlenav={handlenav} />
-      )}
+      <Chat />
     </div>
   );
 }
