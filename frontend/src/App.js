@@ -23,17 +23,14 @@ function App() {
   }
 
   return (
-    // <div>
-    //   {cookies.username ? (
-    //     <Chat />
-    //   ) : navgation ? (
-    //     <Login onhandlenav={handlenav} onLogin={handleLogin} />
-    //   ) : (
-    //     <Registration onhandlenav={handlenav} />
-    //   )}
-    // </div>
     <div>
-      <Chat />
+      {cookies.username ? (
+        <Chat />
+      ) : navgation ? (
+        <Login onhandlenav={handlenav} onLogin={handleLogin} />
+      ) : (
+        <Registration onhandlenav={handlenav} />
+      )}
     </div>
   );
 }
