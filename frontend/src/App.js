@@ -5,7 +5,7 @@ import Login from "./Login";
 import Registration from "./Registration";
 import Bot from "./bot";
 import Chat from "./chat";
-import { CookiesProvider, useCookies } from "react-cookie";
+import { Cookies, CookiesProvider, useCookies } from "react-cookie";
 
 function App() {
   const [loggedInUsername, setLoggedInUsername] = useState(null);
@@ -22,8 +22,13 @@ function App() {
     setnavigation((nav) => !nav);
   }
 
-  function handleLogin(username) {
-    setCookie("username", username, { path: "/" });
+  function handleCookie(username) {
+    setCookie("username", username, {
+      path: "/",
+      sameSite: "None",
+    });
+    setLoggedInUsername(username);
+    console.log(loggedInUsername);
   }
 
   return (
@@ -31,9 +36,9 @@ function App() {
       {cookies.username && (cookies.username != undefined) ? (
           <Chat />
       ) : navgation ? (
-        <Login onhandlenav={handlenav} onLogin={handleLogin} />
+        <Login onhandlenav={handlenav} onHandleCookie={handleCookie} />
       ) : (
-        <Registration onhandlenav={handlenav} onRegister={handleLogin} />
+        <Registration onhandlenav={handlenav} onHandleCookie={handleCookie} />
       )}
     </div>
   );

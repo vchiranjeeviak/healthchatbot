@@ -3,6 +3,9 @@ import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import { faHandsHoldingChild } from "@fortawesome/free-solid-svg-icons";
 
 export default function Bot() {
+  function handleReload() {
+    window.location.reload(false);
+  }
   return (
     <div className="bot">
       <FontAwesomeIcon icon={faRobot} size="2xl" />
@@ -16,6 +19,9 @@ export default function Bot() {
         </span>
         ChatBot
       </h3>
+      <button className="reset-btn" onClick={handleReload}>
+        Reset
+      </button>
     </div>
   );
 }

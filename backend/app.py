@@ -141,7 +141,9 @@ def final():
         "message": "Please take these precautions",
         "payload": [
             get_precautions(request.get_json()['present_disease'][0]),
-            get_description()[request.get_json()['present_disease'][0]]
+            get_description()[request.get_json()['present_disease'][0]],
+            get_precautions(request.get_json()['second_symptom'][0]),
+            get_description()[request.get_json()['second_symptom'][0]]
         ],
         "next": True
     }

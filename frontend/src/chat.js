@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowTurnUp } from "@fortawesome/free-solid-svg-icons";
 import {useCookies} from 'react-cookie'
@@ -49,11 +49,12 @@ export default function Chat() {
 
   const [symptomCookie, setSymptomCookie] = useCookies("symptom")
   const [presentDiseaseCookie, setPresentDiseaseCookie] = useCookies("present_disease")
+  const [secondSymptom, setSecondSymptom] = useCookies("second_symptom")
   const [dayCookie, setDayCookie] = useCookies("days")
   
   // setSymptomCookie("symptom", null, { path: "/" })
 
-  const handleUserChat = async (value, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie) => {
+  const handleUserChat = async (value, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie, second_symptom, setSecondSymptom) => {
     if (value.length === 0) {
         return
     }
@@ -62,7 +63,6 @@ export default function Chat() {
         await addMessage(setChat, value, 'user');
     }
 
-    const url = `http://127.0.0.1:5000/${chatStage.endpoint}`
     switch (chatStage.stage) {
         case 1:
             console.log("case 1")
@@ -89,7 +89,7 @@ export default function Chat() {
             if (symptomRes.next) {
                 setSymptomCookie("symptom", value, { path: "/" })
                 localStorage.setItem("symptom", value)
-                handleUserChat(" ", chatStages[1], setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie)
+                handleUserChat(" ", chatStages[1], setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie, secondSymptom, setSecondSymptom)
             }
             break;
 
@@ -170,10 +170,11 @@ export default function Chat() {
                     str = str + secondSymptomRes.payload[1]
                 }
             }
-
+            setSecondSymptom(secondSymptomRes.payload[1])
+            localStorage.setItem('second_symptom', secondSymptomRes.payload[1])
             addMessage(setChat, str, 'bot')
             setChatStage(chatStages[4])
-            handleUserChat(" ", chatStages[4], setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie)
+            handleUserChat(" ", chatStages[4], setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie, secondSymptom, setSecondSymptom)
 
             break;
 
@@ -186,17 +187,25 @@ export default function Chat() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ 
-                    present_disease: [presentDiseaseCookie.present_disease || localStorage.getItem('present_disease')]
+                    present_disease: [presentDiseaseCookie.present_disease || localStorage.getItem('present_disease')],
+                    second_symptom: [secondSymptom.second_symptom || localStorage.getItem('second_symptom')]
                 })
             })
             console.log(finalResponse)
             const finalRes = await finalResponse.json()
+            addMessage(setChat, finalRes.payload[1], 'bot')
+            if (finalRes?.payload[3]) {
+                addMessage(setChat, finalRes.payload[3], 'bot')
+            }
             addMessage(setChat, finalRes.message, 'bot')
             finalRes.payload[0].map((item, index) => {
                 addMessage(setChat, item, 'bot')
             })
-            addMessage(setChat, finalRes.payload[1], 'bot')
+            finalRes.payload[2].map((item, index) => {
+                addMessage(setChat, item, 'bot')
+            })
             console.log(finalRes.payload)
+            addMessage(setChat, "You can reset everything by clicking on reset button.", 'bot')
     }
   };
 
@@ -207,7 +216,7 @@ export default function Chat() {
 
   return (
     <div>
-      <ChatPage chat={chat} submitBtn={submit} />
+      <ChatPage userChat={chat} submitBtn={submit} />
       <UserChat
         onHandleUserChat={handleUserChat}
         userInput={userInput}
@@ -222,18 +231,29 @@ export default function Chat() {
         setPresentDiseaseCookie={setPresentDiseaseCookie}
         dayCookie={dayCookie}
         setDayCookie={setDayCookie}
+        secondSymptom={secondSymptom}
+        setSecondSymptom={setSecondSymptom}
       />
     </div>
   );
 }
 
-function ChatPage({ chat, submitBtn }) {
+function ChatPage({ userChat, submitBtn }) {
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to the bottom whenever userChat changes
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [userChat]);
 
   return (
     <main>
-      <div className="chat-container">
+      <div className="chat-container" ref={chatContainerRef}>
         <ul>
-          {chat.map((messageObj, index) => (
+          {userChat.map((messageObj, index) => (
               messageObj.entity === 'user'
               ? <li className="user-chat-list" key={index}>{messageObj.value}</li>
               : <li className="bot-chat-list" key={index}>{messageObj.value}</li>))}
@@ -243,7 +263,7 @@ function ChatPage({ chat, submitBtn }) {
   );
 }
 
-function UserChat({ onHandleUserChat, onHandleSubmit, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie }) {
+function UserChat({ onHandleUserChat, onHandleSubmit, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie, secondSymptom, setSecondSymptom }) {
   const [childInput, setChildInput] = useState("");
 
   const handleInputChange = (e) => {
@@ -252,7 +272,7 @@ function UserChat({ onHandleUserChat, onHandleSubmit, chatStage, setChat, setCha
   };
 
   const handleButtonClick = () => {
-    onHandleUserChat(childInput, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie);
+    onHandleUserChat(childInput, chatStage, setChat, setChatStage, chatStages, symptomCookie, setSymptomCookie, presentDiseaseCookie, setPresentDiseaseCookie, dayCookie, setDayCookie, secondSymptom, setSecondSymptom);
     onHandleSubmit();
     setChildInput(""); // Clear the input field in the child component
   };

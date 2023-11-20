@@ -5,7 +5,7 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-export default function Login({ a, onhandlenav, onLogin }) {
+export default function Login({ a, onhandlenav, onHandleCookie }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -19,17 +19,19 @@ export default function Login({ a, onhandlenav, onLogin }) {
         },
         body: JSON.stringify({ username, password }),
       });
+      
+      const data = await response.json()
+      if (data.error) {
+          setErrorMessage(data.error)
+      } else {
+          onHandleCookie(username);
+      }
+      console.log(data);
 
       if (!response.ok) {
         // Check if the response status is not in the range 200-299 (not successful)
         throw new Error(`Error during login. Status: ${response.status}`);
       }
-
-      const data = await response.json();
-      onLogin(data.username)
-      console.log(data);
-
-      // Perform further actions with the data if needed
     } catch (error) {
       console.error("Error during login:", error.message);
       setErrorMessage("Error during login. Please try again.");
