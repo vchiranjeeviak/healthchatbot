@@ -5,10 +5,15 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-export default function Login({ a, onhandlenav, onHandleCookie }) {
+export default function Login({
+  a,
+  onhandlenav,
+  onHandleCookie,
+  onHandleCssProperty,
+}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(true);
 
   const handleLogin = async () => {
     try {
@@ -19,12 +24,13 @@ export default function Login({ a, onhandlenav, onHandleCookie }) {
         },
         body: JSON.stringify({ username, password }),
       });
-      
-      const data = await response.json()
+
+      const data = await response.json();
       if (data.error) {
-          setErrorMessage(data.error)
+        setErrorMessage(data.error);
       } else {
-          onHandleCookie(username);
+        onHandleCssProperty();
+        onHandleCookie(username);
       }
       console.log(data);
 
@@ -49,7 +55,7 @@ export default function Login({ a, onhandlenav, onHandleCookie }) {
           <div className="user-input">
             {errorMessage && (
               <p className="error" style={{ color: "red" }}>
-                git Error while Fetching Data
+                Opps!! Error while Fetching Data
               </p>
             )}
             <h5>User ID</h5>
@@ -75,7 +81,13 @@ export default function Login({ a, onhandlenav, onHandleCookie }) {
           </div>
         </div>
         <div className="login">
-          <button className="button" onClick={handleLogin}>
+          <button
+            className="button"
+            onClick={() => {
+              onHandleCssProperty("flex");
+              handleLogin();
+            }}
+          >
             Login
           </button>
           <a href="#">
