@@ -5,21 +5,33 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function Registration({ onhandlenav }) {
+function Registration({ onhandlenav, onHandleCookie }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const handleRegister = async () => {
-    const response = await fetch("http://localhost:5000", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await response.json();
-    if (data.error) {
-      setErrorMessage("Error during registration. Please try again.");
+    try {
+      const response = await fetch("http://127.0.0.1:5000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      onHandleCookie({ username });
+
+      if (!response.ok) {
+        // Check if the response status is not in the range 200-299 (not successful)
+        throw new Error(`Error during login. Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data.value);
+
+      // Perform further actions with the data if needed
+    } catch (error) {
+      console.error("Error during login:", error.message);
+      setErrorMessage("Error during login. Please try again.");
     }
   };
   return (

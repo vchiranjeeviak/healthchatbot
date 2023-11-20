@@ -5,27 +5,28 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-export default function Login({ a, onhandlenav, onLogin }) {
+export default function Login({ a, onhandlenav, onHandleCookie }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:5000", {
+      const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
+      onHandleCookie({ username });
+      const data = await response.json();
+      console.log(data.value);
 
       if (!response.ok) {
         // Check if the response status is not in the range 200-299 (not successful)
         throw new Error(`Error during login. Status: ${response.status}`);
       }
-
-      const data = await response.json();
-      console.log(data.value);
 
       // Perform further actions with the data if needed
     } catch (error) {
