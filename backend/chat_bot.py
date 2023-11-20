@@ -79,7 +79,7 @@ def calc_condition(exp, days):
     sum = 0
     for item in exp:
         sum = sum+severityDictionary[item]
-    if ((sum * days) / (len(exp) + 1) > 13):
+    if ((int(sum) * int(days)) / (len(exp) + 1) > 13):
         print("You should take the consultation from doctor. ")
     else:
         print("It might not be that bad but you should take precautions.")
@@ -205,7 +205,11 @@ def get_reduced_data():
 
 
 def get_precautions(present_disease):
+    print(present_disease)
     return precautionDictionary[present_disease]
+
+def get_description():
+    return description_list
 
 
 def tree_to_code(tree, feature_names):

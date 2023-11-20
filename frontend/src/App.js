@@ -6,13 +6,14 @@ import Registration from "./Registration";
 import Bot from "./bot";
 import Chat from "./chat";
 import { Cookies, CookiesProvider, useCookies } from "react-cookie";
+
 function App() {
   const [loggedInUsername, setLoggedInUsername] = useState(null);
   const [navgation, setnavigation] = useState(true);
   const [cookies, setCookie] = useCookies(["username"]);
 
   useEffect(() => {
-    if (cookies.username) {
+    if (cookies.username && (cookies.username != undefined)) {
       setnavigation(false);
     }
   }, [cookies]);
@@ -23,28 +24,22 @@ function App() {
 
   function handleCookie(username) {
     setCookie("username", username, {
-      path: "/login",
+      path: "/",
       sameSite: "None",
-      secure: true,
     });
     setLoggedInUsername(username);
     console.log(loggedInUsername);
   }
 
   return (
-    // <CookiesProvider>
-    //   <div>
-    //     {cookies.username ? (
-    //       <Chat />
-    //     ) : navgation ? (
-    //       <Registration onhandlenav={handlenav} onHandleCookie={handleCookie} />
-    //     ) : (
-    //       <Login onhandlenav={handlenav} onHandleCookie={handleCookie} />
-    //     )}
-    //   </div>
-    // </CookiesProvider>
     <div>
-      <Chat />
+      {cookies.username && (cookies.username != undefined) ? (
+          <Chat />
+      ) : navgation ? (
+        <Login onhandlenav={handlenav} onHandleCookie={handleCookie} />
+      ) : (
+        <Registration onhandlenav={handlenav} onHandleCookie={handleCookie} />
+      )}
     </div>
   );
 }

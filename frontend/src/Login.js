@@ -19,21 +19,25 @@ export default function Login({ a, onhandlenav, onHandleCookie }) {
         },
         body: JSON.stringify({ username, password }),
       });
-      onHandleCookie({ username });
-      const data = await response.json();
-      console.log(data.value);
+      
+      const data = await response.json()
+      if (data.error) {
+          setErrorMessage(data.error)
+      } else {
+          onHandleCookie(username);
+      }
+      console.log(data);
 
       if (!response.ok) {
         // Check if the response status is not in the range 200-299 (not successful)
         throw new Error(`Error during login. Status: ${response.status}`);
       }
-
-      // Perform further actions with the data if needed
     } catch (error) {
       console.error("Error during login:", error.message);
       setErrorMessage("Error during login. Please try again.");
     }
   };
+
   return (
     <div className="main">
       <div className="right">
