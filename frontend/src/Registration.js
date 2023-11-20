@@ -5,23 +5,30 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function Registration({ onhandlenav }) {
+function Registration({ onhandlenav, onRegister }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const handleRegister = async () => {
-    const response = await fetch("http://localhost:5000", {
+    const response = await fetch("http://127.0.0.1:5000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
+
     const data = await response.json();
     if (data.error) {
       setErrorMessage("Error during registration. Please try again.");
+    } else {
+      onRegister(data.username)
     }
+    
+    console.log(data)
   };
+
   return (
     <div className="main">
       <div className="right">

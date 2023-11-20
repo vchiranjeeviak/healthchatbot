@@ -9,9 +9,10 @@ export default function Login({ a, onhandlenav, onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:5000", {
+      const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +26,8 @@ export default function Login({ a, onhandlenav, onLogin }) {
       }
 
       const data = await response.json();
-      console.log(data.value);
+      onLogin(data.username)
+      console.log(data);
 
       // Perform further actions with the data if needed
     } catch (error) {
@@ -33,6 +35,7 @@ export default function Login({ a, onhandlenav, onLogin }) {
       setErrorMessage("Error during login. Please try again.");
     }
   };
+
   return (
     <div className="main">
       <div className="right">

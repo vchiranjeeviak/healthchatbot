@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 import sqlite3
 import bcrypt
 from database_utils import create_user, get_hashed_password
-from chat_bot import check_pattern, get_feature_names, get_tree, get_features, get_reduced_data, print_disease, sec_predict, calc_condition, get_precautions
+from chat_bot import check_pattern, get_feature_names, get_tree, get_features, get_reduced_data, print_disease, sec_predict, calc_condition, get_precautions, getSeverityDict, getDescription, getprecautionDict, get_description
 from sklearn.tree import _tree
 
 app = Flask(__name__)
@@ -65,18 +65,22 @@ def confirm_symptom():
     if len(cnf_dis) == 1:
         return {
             "message": None,
-            "payload": cnf_dis[0],
+            "payload": None,
             "next": True
         }
 
     return {
-        "message": "Please select the number of the symptom you meant.",
+        "message": "Please type the exact name of the symptom you meant from below:",
         "payload": cnf_dis,
-        "next": True
+        "next": False 
     }
 
 @app.route("/more_symptoms", methods=['POST'])
 def more_symptoms():
+    getSeverityDict()
+    getDescription()
+    getprecautionDict()
+
     tree_ = get_tree().tree_
     features = get_features(tree_, get_feature_names())
 
@@ -100,7 +104,7 @@ def more_symptoms():
             return (present_disease, red_cols[reduced_data.loc[present_disease].values[0].nonzero()].tolist())
 
     return {
-        "message": None,
+        "message": "Enter the symptoms you are experiencing from this list with exact names separated by commas(,):",
         "payload": recurse(0, 1),
         "next": True
     }
@@ -113,6 +117,7 @@ def second_symptom():
     symptoms_exp = request_body['symptoms_exp']
     num_days = request_body['num_days']
 
+    print(symptoms_exp)
     second_prediction = sec_predict(symptoms_exp)
     calc_condition(symptoms_exp, num_days)
     if (present_disease[0] == second_prediction[0]):
@@ -131,8 +136,12 @@ def second_symptom():
 
 @app.route("/final", methods=['POST'])
 def final():
+    print(get_precautions(request.get_json()['present_disease'][0]))
     return {
         "message": "Please take these precautions",
-        "payload": get_precautions(request.get_json()['present_disease'][0]),
+        "payload": [
+            get_precautions(request.get_json()['present_disease'][0]),
+            get_description()[request.get_json()['present_disease'][0]]
+        ],
         "next": True
     }
