@@ -95,14 +95,30 @@ a {
 }
 
 /* chat styleing */
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.reset-btn {
+  width: 80px;
+  height: 30px;
+  border: 2px solid black;
+  outline: none;
+  cursor: pointer;
+  margin-left: 56rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-image: linear-gradient(#a5f93f 1%, #b9e4f3 100%);
+}
 
 .chat-container {
-  height: 60vh;
+  height: 52vh;
   width: 60%;
-  overflow-y: 60vh; /* Enable vertical scrolling if content exceeds the height */
+  overflow-y: 0; /* Enable vertical scrolling if content exceeds the height */
   overflow-x: auto; /* Hide horizontal scrollbar */
   overflow-wrap: break-word;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -166,6 +182,7 @@ a {
   cursor: pointer;
   border: none;
   box-sizing: border-box;
+  border: 2px solid black;
 }
 
 @media screen and (max-width: 960px) {
