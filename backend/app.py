@@ -26,7 +26,7 @@ def register():
         }
     except:
         return {
-            "error": "user creation failed"
+            "error": "user creation failed. user may already exist"
         }
 
 
@@ -54,6 +54,9 @@ def login():
 
 @app.route("/symptom", methods=['POST'])
 def confirm_symptom():
+    getSeverityDict()
+    getDescription()
+    getprecautionDict()
     conf, cnf_dis = check_pattern(get_feature_names(), request.get_json()['symptom'])
     if conf == 0:
         return {
@@ -123,7 +126,7 @@ def second_symptom():
     if (present_disease[0] == second_prediction[0]):
         return {
             "message": "You may have this disease",
-            "payload": present_disease[0],
+            "payload": [present_disease[0]],
             "next": True
         }
 
@@ -137,13 +140,23 @@ def second_symptom():
 @app.route("/final", methods=['POST'])
 def final():
     print(get_precautions(request.get_json()['present_disease'][0]))
+    try:
+        one = get_precautions(request.get_json()['present_disease'][0]),
+        two = get_description()[request.get_json()['present_disease'][0]],
+    except:
+        one = None
+        two = None
+
+    try:
+        three = get_precautions(request.get_json()['second_symptom'][0]),
+        four = get_description()[request.get_json()['second_symptom'][0]]
+    except:
+        three = None
+        four = None
     return {
         "message": "Please take these precautions",
         "payload": [
-            get_precautions(request.get_json()['present_disease'][0]),
-            get_description()[request.get_json()['present_disease'][0]],
-            get_precautions(request.get_json()['second_symptom'][0]),
-            get_description()[request.get_json()['second_symptom'][0]]
+            one, two, three, four
         ],
         "next": True
     }

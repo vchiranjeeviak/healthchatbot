@@ -50,7 +50,7 @@ function Registration({ onhandlenav, onHandleCookie, onHandleCssProperty }) {
           <div className="user-input">
             {errorMessage && (
               <p className="error" style={{ color: "red" }}>
-                Error while Fetching Data
+                {errorMessage} 
               </p>
             )}
             <h5>User ID</h5>

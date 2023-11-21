@@ -13,7 +13,7 @@ export default function Login({
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -55,7 +55,7 @@ export default function Login({
           <div className="user-input">
             {errorMessage && (
               <p className="error" style={{ color: "red" }}>
-                Opps!! Error while Fetching Data
+                {errorMessage}
               </p>
             )}
             <h5>User ID</h5>
@@ -74,6 +74,7 @@ export default function Login({
               <FontAwesomeIcon icon={faLock} />
               <input
                 placeholder="Password"
+                type="password"
                 className="user-input"
                 onChange={(e) => setPassword(e.target.value)}
               />
