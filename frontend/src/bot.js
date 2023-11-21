@@ -26,14 +26,13 @@ export default function Bot({
           ChatBot
         </h3>
       </div>
-      <div className="log-reset" style={{ display: { cssProperty } }}>
+      <div className="log-reset" style={{ display:  cssProperty  }}>
         <button className="log-reset-btn" onClick={handleReload}>
           Reset
         </button>
         <button
           className="log-reset-btn"
           onClick={() => {
-            onHandleRemoveCookie();
             onHandleLogout();
           }}
         >

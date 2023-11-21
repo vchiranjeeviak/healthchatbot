@@ -12,29 +12,32 @@ function App() {
   const [navgation, setnavigation] = useState(true);
   const [cssProperty, setCssProperty] = useState("");
   const [logout, setLogout] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["username"]);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("username") !== null)
 
   useEffect(() => {
-    if (cookies.username && cookies.username !== undefined) {
+    if (isLoggedIn) {
       setnavigation(false);
+      setCssProperty("flex")
+    } else {
+      setCssProperty("")
     }
-  }, [cookies]);
+  }, [isLoggedIn]);
 
   function handlenav(nav) {
     setnavigation((nav) => !nav);
   }
 
-  function handleCookie(username) {
-    setCookie("username", username, {
-      path: "/",
-      sameSite: "None",
-    });
-    setLoggedInUsername(username);
-    console.log(loggedInUsername);
-  }
+  //function handleCookie(username) {
+  //  setCookie("username", username, {
+  //    path: "/",
+  //    sameSite: "None",
+  //  });
+  //  setLoggedInUsername(username);
+  //  console.log(loggedInUsername);
+  //}
 
   function removeCookieHandler() {
-    removeCookie("username");
+   //  removeCookie("username");
     setLoggedInUsername(null);
   }
 
@@ -43,29 +46,30 @@ function App() {
   }
 
   function handleLogout() {
-    setLogout((lu) => !lu);
+    localStorage.removeItem("username")
+    setIsLoggedIn(false)
   }
 
   return (
     <div>
       <Bot
-        onHandleRemoveCookie={removeCookieHandler}
         cssProperty={cssProperty}
         onHandleLogout={handleLogout}
+        setIsLoggedIn={setIsLoggedIn}
       />
-      {cookies.username && cookies.username !== undefined ? (
+      {isLoggedIn ? (
         <Chat />
       ) : navgation && logout ? (
         <Login
           onhandlenav={handlenav}
-          onHandleCookie={handleCookie}
           onHandleCssProperty={handleCssProperty}
+          setIsLoggedIn={setIsLoggedIn}
         />
       ) : (
         <Registration
           onhandlenav={handlenav}
-          onHandleCookie={handleCookie}
           onHandleCssProperty={handleCssProperty}
+          setIsLoggedIn={setIsLoggedIn}
         />
       )}
     </div>

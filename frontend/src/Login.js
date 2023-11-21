@@ -8,8 +8,7 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 export default function Login({
   a,
   onhandlenav,
-  onHandleCookie,
-  onHandleCssProperty,
+  setIsLoggedIn
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,8 +28,8 @@ export default function Login({
       if (data.error) {
         setErrorMessage(data.error);
       } else {
-        onHandleCssProperty();
-        onHandleCookie(username);
+        localStorage.setItem("username", data.username)
+        setIsLoggedIn(true)
       }
       console.log(data);
 
@@ -85,7 +84,6 @@ export default function Login({
           <button
             className="button"
             onClick={() => {
-              onHandleCssProperty("flex");
               handleLogin();
             }}
           >

@@ -5,7 +5,7 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function Registration({ onhandlenav, onHandleCookie, onHandleCssProperty }) {
+function Registration({ onhandlenav, setIsLoggedIn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,8 +24,8 @@ function Registration({ onhandlenav, onHandleCookie, onHandleCssProperty }) {
       if (data.error) {
         setErrorMessage(data.error);
       } else {
-        onHandleCssProperty();
-        onHandleCookie(username);
+        localStorage.setItem("username", data.username)
+        setIsLoggedIn(true)
       }
 
       if (!response.ok) {

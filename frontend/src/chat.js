@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowTurnUp } from "@fortawesome/free-solid-svg-icons";
 import { useCookies } from "react-cookie";
-// import { useEffect } from "react"
 
 export default function Chat() {
   const [userInput, setUserInput] = useState("");
@@ -10,7 +9,7 @@ export default function Chat() {
   const [chat, setChat] = useState([
     {
       entity: "bot",
-      value: "Hello World, I am health chat bot. I am here to help you find your disease. Please enter your symptom",
+      value: `Hello ${localStorage.getItem("username").toUpperCase()}, I am health chat bot. I am here to help you find your disease. Please enter your symptom`,
     },
   ]);
   const [speechText, setSpeechText] = useState("Hello World, I am health chat bot. I am here to help you find your disease. Please enter your symptom")
@@ -24,8 +23,17 @@ export default function Chat() {
       window.speechSynthesis.speak(speech)
   }
 
+  async function speak(message) {
+    return new Promise((resolve, reject) => {
+        var synth = window.speechSynthesis;
+        var utterThis = new SpeechSynthesisUtterance(message);
+        synth.speak(utterThis);
+        utterThis.onend = resolve;
+  });
+}
+
   useEffect(() => {
-      textToSpeech(speech, "Hello World, I am health chat bot. I am here to help you find your disease. Please enter your symptom")
+      textToSpeech(speech, `Hello ${localStorage.getItem("username")}, I am health chat bot. I am here to help you find your disease. Please enter your symptom`)
   }, [])
 
   const chatStages = [
@@ -51,12 +59,6 @@ export default function Chat() {
     },
   ];
     
-  // useEffect(() => {
-  //   window.speechSynthesis.speak(msg)
-  // }, [msg])
-  
-  
-
   const [chatStage, setChatStage] = useState(chatStages[0]);
 
   const [submit, setSubmit] = useState(false);
@@ -252,17 +254,15 @@ export default function Chat() {
         console.log(finalRes.payload);
 
         if (finalRes.payload[0] && finalRes.payload[1]) {
-            // setSpeechText(finalRes.payload[1])
-            await textToSpeech(speech, finalRes.payload[1])
             addMessage(setChat, finalRes.payload[1], "bot");
+            await speak(finalRes.payload[1])
             finalRes.payload[0][0].map((item, index) => {
                 addMessage(setChat, item, "bot");
             });
         }
         if (finalRes.payload[2] && finalRes.payload[3]) {
-            // setSpeechText(finalRes.payload[3])
-            await textToSpeech(speech, finalRes.payload[3])
             addMessage(setChat, finalRes.payload[3], "bot");
+            await speak(finalRes.payload[3])
             finalRes.payload[2][0].map((item, index) => {
                 addMessage(setChat, item, "bot");
             });
