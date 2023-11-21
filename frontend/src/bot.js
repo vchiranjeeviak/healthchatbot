@@ -10,6 +10,7 @@ export default function Bot({
   function handleReload() {
     window.location.reload(false);
   }
+  console.log(typeof cssProperty);
 
   return (
     <div className="main-bot">
@@ -26,7 +27,7 @@ export default function Bot({
           ChatBot
         </h3>
       </div>
-      <div className="log-reset" style={{ display: { cssProperty } }}>
+      <div className="log-reset" style={{ display: cssProperty }}>
         <button className="log-reset-btn" onClick={handleReload}>
           Reset
         </button>

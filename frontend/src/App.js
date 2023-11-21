@@ -14,11 +14,25 @@ function App() {
   const [logout, setLogout] = useState(true);
   const [cookies, setCookie, removeCookie] = useCookies(["username"]);
 
+  const userPresence = cookies.username && cookies.username !== undefined;
+
   useEffect(() => {
     if (cookies.username && cookies.username !== undefined) {
       setnavigation(false);
     }
   }, [cookies]);
+
+  useEffect(() => {
+    if (userPresence) {
+      setCssProperty("flex");
+    } else {
+      setCssProperty("");
+    }
+
+    if (cookies.username && cookies.username !== undefined) {
+      setnavigation(false);
+    }
+  }, [userPresence, cookies]);
 
   function handlenav(nav) {
     setnavigation((nav) => !nav);
@@ -30,7 +44,6 @@ function App() {
       sameSite: "None",
     });
     setLoggedInUsername(username);
-    console.log(loggedInUsername);
   }
 
   function removeCookieHandler() {
@@ -38,13 +51,14 @@ function App() {
     setLoggedInUsername(null);
   }
 
-  function handleCssProperty() {
-    setCssProperty("flex");
-  }
-
   function handleLogout() {
     setLogout((lu) => !lu);
   }
+
+  // console.log(cssProperty);
+  // console.log(userPresence);
+  // console.log(navgation);
+  // console.log(logout);
 
   return (
     <div>
@@ -53,20 +67,12 @@ function App() {
         cssProperty={cssProperty}
         onHandleLogout={handleLogout}
       />
-      {cookies.username && cookies.username !== undefined ? (
+      {userPresence ? (
         <Chat />
-      ) : navgation && logout ? (
-        <Login
-          onhandlenav={handlenav}
-          onHandleCookie={handleCookie}
-          onHandleCssProperty={handleCssProperty}
-        />
+      ) : navgation || logout ? (
+        <Login onhandlenav={handlenav} onHandleCookie={handleCookie} />
       ) : (
-        <Registration
-          onhandlenav={handlenav}
-          onHandleCookie={handleCookie}
-          onHandleCssProperty={handleCssProperty}
-        />
+        <Registration onhandlenav={handlenav} onHandleCookie={handleCookie} />
       )}
     </div>
   );

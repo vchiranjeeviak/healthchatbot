@@ -9,7 +9,7 @@ export default function Login({
   a,
   onhandlenav,
   onHandleCookie,
-  onHandleCssProperty,
+  // onHandleCssProperty,
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +29,6 @@ export default function Login({
       if (data.error) {
         setErrorMessage(data.error);
       } else {
-        onHandleCssProperty();
         onHandleCookie(username);
       }
       console.log(data);
@@ -85,7 +84,6 @@ export default function Login({
           <button
             className="button"
             onClick={() => {
-              onHandleCssProperty("flex");
               handleLogin();
             }}
           >
