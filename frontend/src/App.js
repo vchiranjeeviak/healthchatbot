@@ -10,10 +10,12 @@ import { Cookies, CookiesProvider, useCookies } from "react-cookie";
 function App() {
   const [loggedInUsername, setLoggedInUsername] = useState(null);
   const [navgation, setnavigation] = useState(true);
-  const [cookies, setCookie] = useCookies(["username"]);
+  const [cssProperty, setCssProperty] = useState("");
+  const [logout, setLogout] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(["username"]);
 
   useEffect(() => {
-    if (cookies.username && (cookies.username != undefined)) {
+    if (cookies.username && cookies.username !== undefined) {
       setnavigation(false);
     }
   }, [cookies]);
@@ -31,14 +33,40 @@ function App() {
     console.log(loggedInUsername);
   }
 
+  function removeCookieHandler() {
+    removeCookie("username");
+    setLoggedInUsername(null);
+  }
+
+  function handleCssProperty() {
+    setCssProperty("flex");
+  }
+
+  function handleLogout() {
+    setLogout((lu) => !lu);
+  }
+
   return (
     <div>
-      {cookies.username && (cookies.username != undefined) ? (
-          <Chat />
-      ) : navgation ? (
-        <Login onhandlenav={handlenav} onHandleCookie={handleCookie} />
+      <Bot
+        onHandleRemoveCookie={removeCookieHandler}
+        cssProperty={cssProperty}
+        onHandleLogout={handleLogout}
+      />
+      {cookies.username && cookies.username !== undefined ? (
+        <Chat />
+      ) : navgation && logout ? (
+        <Login
+          onhandlenav={handlenav}
+          onHandleCookie={handleCookie}
+          onHandleCssProperty={handleCssProperty}
+        />
       ) : (
-        <Registration onhandlenav={handlenav} onHandleCookie={handleCookie} />
+        <Registration
+          onhandlenav={handlenav}
+          onHandleCookie={handleCookie}
+          onHandleCssProperty={handleCssProperty}
+        />
       )}
     </div>
   );

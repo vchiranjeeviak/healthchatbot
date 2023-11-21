@@ -4,14 +4,25 @@ body {
   font-family: "Poppins", sans-serif;
 }
 .error {
-  display: none;
+  display: flex;
 }
+
+.main-bot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 70px; */
+}
+
 .bot {
-  position: sticky;
+  position: fixed;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: "Orbitron", sans-serif;
+  margin-right: 20px;
+  margin-top: 100px;
 }
 span {
   margin: 0 5px;
@@ -95,18 +106,22 @@ a {
 }
 
 /* chat styleing */
-main {
-  display: flex;
-  flex-direction: column;
+
+.log-reset {
+  display: None;
+  align-items: center;
+  flex-direction: row;
+  margin-left: 50rem;
+  margin-top: 20px;
+  gap: 20px;
 }
 
-.reset-btn {
+.log-reset-btn {
   width: 80px;
   height: 30px;
   border: 2px solid black;
   outline: none;
   cursor: pointer;
-  margin-left: 56rem;
   font-size: 1rem;
   border-radius: 20px;
   background-image: linear-gradient(#a5f93f 1%, #b9e4f3 100%);
