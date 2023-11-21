@@ -199,6 +199,9 @@ export default function Chat() {
         console.log(secondSymptomResponse);
         const secondSymptomRes = await secondSymptomResponse.json();
         console.log(secondSymptomRes);
+        if (secondSymptomRes.severity) {
+            addMessage(setChat, secondSymptomRes.severity, "bot")
+        }
         addMessage(setChat, secondSymptomRes.message, "bot");
         let str = "";
         if (

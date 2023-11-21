@@ -122,17 +122,19 @@ def second_symptom():
 
     print(symptoms_exp)
     second_prediction = sec_predict(symptoms_exp)
-    calc_condition(symptoms_exp, num_days)
+    severity = calc_condition(symptoms_exp, num_days)
     if (present_disease[0] == second_prediction[0]):
         return {
             "message": "You may have this disease",
             "payload": [present_disease[0]],
+            "severity": severity,
             "next": True
         }
 
     return {
         "message": "You may have either of these",
         "payload": [present_disease[0], second_prediction[0]],
+        "severity": severity,
         "next": True
     }
 

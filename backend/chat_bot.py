@@ -80,9 +80,9 @@ def calc_condition(exp, days):
     for item in exp:
         sum = sum+severityDictionary[item]
     if ((int(sum) * int(days)) / (len(exp) + 1) > 13):
-        print("You should take the consultation from doctor. ")
+        return "You should take the consultation from doctor."
     else:
-        print("It might not be that bad but you should take precautions.")
+        return "It might not be that bad but you should take precautions."
 
 
 def getDescription():
